@@ -13,6 +13,7 @@ namespace test
         public void Test_Receipe_Validation()
         {
             var recipe = new Recipe();
+            recipe.Name = "";
             var context = new ValidationContext(recipe, serviceProvider: null, items: null);
             var results = new List<ValidationResult>();
 
@@ -52,6 +53,45 @@ namespace test
             {
                 Console.WriteLine("I'm a valid object!");
             }
+        }
+
+        [Fact]
+        public void Test_Game_Validation_SelectedProperties()
+        {
+            var invalidGame = new Game
+            {
+                Name ="My name is way over 20 characters"
+            };
+
+            var results = new List<ValidationResult>();
+            var isValid = Validator.TryValidateObject(invalidGame, new ValidationContext(invalidGame), results, true);
+
+            var properties = new List<string>() {
+                 nameof(invalidGame.Name)
+            };
+
+            List<string> errorMessages = new List<string>();
+
+            if (!isValid)
+            {
+                foreach (var result in results)
+                {
+                    foreach (var member in result.MemberNames)
+                    {
+                        if (properties.Any(m => m == member))
+                        {
+                            errorMessages.Add(result.ErrorMessage);
+                        }
+                    }
+
+                }
+
+                isValid = errorMessages == null || errorMessages.Count == 0;
+            }
+
+
+
+            Assert.False(isValid);
         }
 
         static bool Validate<T>(T obj, out ICollection<ValidationResult> results)

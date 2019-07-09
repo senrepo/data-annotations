@@ -8,7 +8,8 @@ public class Game
     [StringLength(20)]
     public string Name { get; set; }
  
-    [Range(0, 100)]
+    [Required]
+    [Range(10, 100)]
     public decimal Price { get; set; }
 }
 }
