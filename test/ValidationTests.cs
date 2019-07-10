@@ -60,7 +60,7 @@ namespace test
         {
             var invalidGame = new Game
             {
-                Name ="My name is way over 20 characters"
+                Name = "My name is way over 20 characters"
             };
 
             var results = new List<ValidationResult>();
@@ -89,9 +89,18 @@ namespace test
                 isValid = errorMessages == null || errorMessages.Count == 0;
             }
 
-
-
             Assert.False(isValid);
+        }
+
+        [Fact]
+        public void Test_Student_CustomValidation()
+        {
+            var student = new Student();
+
+            if (!Validate(student, out var results))
+            {
+                Console.WriteLine(String.Join("\n", results.Select(o => o.ErrorMessage)));
+            }
         }
 
         static bool Validate<T>(T obj, out ICollection<ValidationResult> results)
